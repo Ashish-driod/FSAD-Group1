@@ -39,9 +39,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`username`, `password`, `id`) VALUES
 ('ashishmohanty@gmail.com', 'testing123', 1),
-('kaushikck@gmail.com', 'ashishchutiya', 2),
-('sauravmishra@gmail.com', 'ashishchutiya', 3),
-('rajulmittal@gmail.com', 'ashishchutiya', 102);
+('kaushikck@gmail.com', 'ashish', 2),
+('sauravmishra@gmail.com', 'ashish', 3),
+('rajulmittal@gmail.com', 'ashish', 102);
 
 -- --------------------------------------------------------
 
