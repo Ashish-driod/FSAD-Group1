@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+//import { imagebase }  from 'assets/RegistrationPage.png';
+const imagebase = require('assets/RegistrationPage.png');
+
+
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -32,12 +36,14 @@ const SignUp = () => {
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                     alt="Your Company"
                 />
+                <img src={imagebase} alt="Fitness Tracker" />
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                     Create your account
                 </h2>
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                
                 <form className="space-y-6" onSubmit={handleSignUp}>
                     {error && <p className="text-red-500 text-xs italic">{error}</p>}
                     <div>

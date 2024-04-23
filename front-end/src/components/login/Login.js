@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+const imagebase = require('assets/RegistrationPage.png');
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -32,6 +33,7 @@ const Login = () => {
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                     alt="Your Company"
                 />
+                <img src={imagebase} alt="Fitness Tracker" />
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                     Sign in to your <span className="font-semibold text-indigo-600 hover:text-indigo-500">FitMate</span> account
                 </h2>
