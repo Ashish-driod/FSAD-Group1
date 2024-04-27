@@ -347,3 +347,43 @@ footer ul li:last-child {
   .button:hover {
 	background-color: #45a049;
   }
+
+  .goalTypeContainer {
+	margin-bottom: 40px; /* Adjust the margin value as needed */
+  }
+
+  .dateInput {
+	width: 200px;
+	padding: 8px;
+	border: 1px solid #ccc; /* Border style */
+	border-radius: 4px; /* Optional: Add border radius for rounded corners */
+  }
+
+  .bodyBackground {
+	
+	background-color: #d7d3e6; /* Light gray background color */
+  }
+
+  .headingBorder {
+	/* Border styles for the heading */
+	border: 2px solid #333; /* Black border */
+	padding: 10px; /* Padding around the text */
+	display: inline-block; /* Display as inline-block to fit the content */
+	border-radius: 8px; /* Optional: Add border radius for rounded corners */
+  }
+
+  .successMessage {
+	padding: 10px;
+	margin-bottom: 10px;
+	background-color: #d4edda; /* Light green background for success message */
+	border: 1px solid #c3e6cb; /* Light green border */
+	border-radius: 4px;
+  }
+  
+  .errorMessage {
+	padding: 10px;
+	margin-bottom: 10px;
+	background-color: #f8d7da; /* Light red background for error message */
+	border: 1px solid #f5c6cb; /* Light red border */
+	border-radius: 4px;
+  }
