@@ -13,8 +13,23 @@ const SignUp = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            navigate('/login'); // Redirect to login after successful signup
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // User successfully created
+                    const user = userCredential.user;
+
+                    // Get the user ID (uid)
+                    const userId = user.uid;
+
+                    console.log('User ID:', userId);
+                    navigate('/login');
+                    // Display the user ID in the console or use it in your app logic
+                })
+                .catch((error) => {
+                    console.error('Error creating user:', error.message); // Handle errors (e.g., email already in use, weak password, etc.)
+                });
+           // await createUserWithEmailAndPassword(auth, email, password);
+             // Redirect to login after successful signup
         } catch (error) {
             setError(error.message);
         }
