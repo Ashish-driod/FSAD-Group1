@@ -1,39 +1,64 @@
 package com.fsad.fitness.demo.controller;
 
-import com.fsad.fitness.demo.model.User;
+
+import com.fsad.fitness.demo.model.Goal; // Import Goal model
+import com.fsad.fitness.demo.repository.UserRepository;
+import com.fsad.fitness.demo.service.GoalService; // Import Goal service
+
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import com.fsad.fitness.demo.repository.UserRepository;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/fitness-tracker")
 public class FitnessTrackerController {
 
     @Autowired
-    UserRepository repository;
+    UserRepository userRepository;
 
-    @PostMapping("/signup")
-    public User createNewUser(@RequestBody User user){
-        User checkUser = repository.findByUsername(user.getUsername());
-        if (checkUser == null) {
-            repository.save(user);
-            return user;
+    @Autowired
+    GoalService goalService; // Add the GoalService injection
+
+
+    // New endpoint to add a goal
+    @Transactional
+    @PostMapping("/addGoal")
+    public ResponseEntity<Goal> addGoal(@RequestBody Goal goal) {
+        Goal createdGoal = goalService.addGoal(goal);
+        return ResponseEntity.ok(createdGoal);
+    }
+
+    // New endpoint to get all goals
+    @GetMapping("/getAllGoal")
+    public ResponseEntity<List<Goal>> getAllGoals() {
+        List<Goal> goals = goalService.getAllGoals();
+        return ResponseEntity.ok(goals);
+    }
+
+    // New endpoint to get a goal by ID
+    @GetMapping("/getGoal/{goalId}")
+    public ResponseEntity<Goal> getGoalById(@PathVariable int goalId) {
+        Optional<Goal> goal = goalService.getGoalById(goalId);
+        if (goal.isPresent()) {
+            return ResponseEntity.ok(goal.get());
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Goal not found");
         }
-        else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST , "Username already exists");
+    }
+    @DeleteMapping("/deleteGoal/{goalId}")
+    public ResponseEntity<Void> deleteGoal(@PathVariable int goalId) {
+        try {
+            goalService.deleteGoalById(goalId);
+            return ResponseEntity.noContent().build(); // Return no content on successful deletion
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         }
     }
 
-    @PostMapping("/signin")
-    public Boolean authenticateUser(@RequestBody User user) {
-        User checkUser = repository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
-        return checkUser != null;
-    }
-
-    @GetMapping("/testing")
-    public String testingController() {
-        return "Testing successful";
-    }
 }
