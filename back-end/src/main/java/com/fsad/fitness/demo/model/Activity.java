@@ -6,40 +6,34 @@ import lombok.Data;
 
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "Goals")
-public class Goal {
+@Table(name = "Activities")
+public class Activity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "goal_id", nullable = false)
-    private int goalId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "activity_id")
+    private int activityId;
 
     @Column(name = "user_id", nullable = false)
     private String userId;
 
 
-    @Column(name = "goal_type", nullable = false, length = 100)
-    private String goalType;
+    @Column(name = "activity_type", nullable = false, length = 100)
+    private String activityType;
 
 
-    @Column(name = "target_value", nullable = false, precision = 10, scale = 2)
-    private BigDecimal targetValue;
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
 
 
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
-
-
-    @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
+    @Column(name = "calories_burned", nullable = false)
+    private Integer caloriesBurned;
 
     // Do not manually set 'created_At' and 'modified_At' fields
     @JsonProperty("createdAt")
