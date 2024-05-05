@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 const imagebase = require('assets/RegistrationPage.png');
+
+import {getAllGoals} from "queries/goal";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -14,7 +16,12 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(auth, email, password).then(userCredential => {
+                console.log(userCredential)
+                getAllGoals();
+            }).catch((errObj)=>{
+                console.log(errObj);
+            });
             navigate('/dashboard/home'); // Redirect to dashboard upon successful login
         } catch (error) {
             setError(error.message);
