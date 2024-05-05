@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-const imagebase = require('assets/RegistrationPage.png');
 
 import {getAllGoals} from "queries/goal";
+import { useUserCredential } from 'contexts/UserContext'; // Import useUserCredential hook
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const { setUserCredential } = useUserCredential();
 
     const auth = getAuth();
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Login = () => {
         e.preventDefault();
         try {
             await signInWithEmailAndPassword(auth, email, password).then(userCredential => {
+                setUserCredential(userCredential);
                 console.log(userCredential)
                 getAllGoals();
             }).catch((errObj)=>{
@@ -40,7 +42,6 @@ const Login = () => {
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                     alt="Your Company"
                 />
-                <img src={imagebase} alt="Fitness Tracker" />
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                     Sign in to your <span className="font-semibold text-indigo-600 hover:text-indigo-500">FitMate</span> account
                 </h2>

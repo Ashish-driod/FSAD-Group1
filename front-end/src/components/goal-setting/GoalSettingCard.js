@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'App.css';
+import { useUserCredential } from 'contexts/UserContext';
+import { getAuth, onAuthStateChanged  } from 'firebase/auth';
+
+
 
 
 const GoalSettingCard = () => {
@@ -9,7 +13,23 @@ const GoalSettingCard = () => {
     const [goalValue, setGoalValue] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [userGoals, setUserGoals] = useState([]);
+    const [userGoals, setUserGoals] = useState({});
+    const { userCredential } = useUserCredential();
+    const [userId, setUserId] = useState(''); // User ID
+    const [successMessage, setSuccessMessage] = useState('');
+    const [editMode, setEditMode] = useState(false);
+    const [savedGoals, setSavedGoals] = useState([]);
+    const [landingMode, setLandingMode] = useState(false);
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    onAuthStateChanged(auth, (user) => {
+        const uid = user?.uid;
+        if (uid) {
+            console.log("user" , user);
+        }
+    })
 
     const goalTypeOptions = [
         'Weight Loss',
@@ -20,6 +40,27 @@ const GoalSettingCard = () => {
         'Overall Fitness'
     ];
 
+    useEffect(() => {
+        const fetchSavedGoals = async () => {
+            try {
+                const response = await fetch(`/fitness-tracker/getAllGoal`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setSavedGoals(data); // Assuming API response contains a 'goals' array
+                    console.log("Saved Goals:", data)
+                } else {
+                    console.error('Failed to fetch saved goals:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching saved goals:', error);
+            }
+        };
+
+        if (editMode || landingMode) {
+            fetchSavedGoals();
+        }
+    }, [editMode, landingMode]);
+
     const handleSetGoal = () => {
         // Logic to handle goal setting (e.g., show a modal or navigate to a goal setting page)
         console.log('Redirecting to goal setting page...');
@@ -29,6 +70,11 @@ const GoalSettingCard = () => {
     const handleCloseModal = () => {
         setShowModal(false);
         // Reset form fields
+        resetForm();
+
+    };
+
+    const resetForm = () => {
         setGoalType('');
         setGoalValue('');
         setStartDate('');
@@ -43,50 +89,68 @@ const GoalSettingCard = () => {
         console.log('Start Date:', startDate);
         console.log('End Date:', endDate);
 
+        onAuthStateChanged(auth, (user) => {
+            const uid = user?.uid;
+            if (uid) {
+                console.log("user" , user);
+            }
+        })
+
         const newGoal = {
-            type: goalType,
-            value: goalValue,
-            startDate: startDate,
-            endDate: endDate
+            "userId": user?.uid,
+            "goalType": goalType,
+            "targetValue": goalValue,
+            "startDate": startDate,
+            "endDate": endDate || null
         };
         // Update userGoals state with the new goal
-        setUserGoals([...userGoals, newGoal]);
+        setUserGoals(newGoal);
         handleCloseModal(); // Close modal after submission
     };
 
     const handleSaveGoals = async () => {
+
         try {
 
-            // Prepare goals array with formatted goal objects
-            const goalsArray = userGoals.map((goal) => ({
-                type: goal.type,
-                value: goal.value,
-                startDate: goal.startDate,
-                endDate: goal.endDate
-            }));
 
-            console.log("Goals Array:" , goalsArray);
+            console.log("Goals Object:", userGoals);
+            console.log("userCreds:", userCredential);
 
-            const response = await fetch('http://example.com/api/goals', {
+
+
+            const response = await fetch(`/fitness-tracker/addGoal`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ goals: goalsArray })
+                body: JSON.stringify(userGoals)
 
             });
-            console.log(userGoals);
+            //console.log("goalsWithUserId", goalsWithUserId);
 
             if (response.ok) {
                 console.log('Goals sent to backend successfully!');
                 // Optionally, clear userGoals state after successful submission
-                setUserGoals([]);
+                setSuccessMessage('Goals saved successfully!!!!');
+                setUserGoals({});
             } else {
                 console.error('Failed to send goals to backend:', response.statusText);
+                setSuccessMessage('Failed to save goals. Please try again.');
             }
         } catch (error) {
             console.error('Error sending goals to backend:', error);
+            setSuccessMessage('Error sending goals. Please try again.');
         }
+    };
+
+    const handleEditGoals = () => {
+        setEditMode(true);
+        setSuccessMessage('');
+    };
+
+    const handleLandingGoals = () => {
+        setLandingMode(true);
+        setSuccessMessage('');
     };
 
     return (
@@ -156,31 +220,68 @@ const GoalSettingCard = () => {
                 </div>
             )}
 
-            <div className="goal-list">
-                {userGoals.map((goal, index) => (
-                    <div key={index} className="goal-card">
-                        <h3 className="text-3xl font-bold">Goal {index + 1}</h3>
-                        <p>
-                            <strong className="text-2xl font-bold">Type:</strong> {goal.type}<br />
-                            <strong className="text-2xl font-bold">Value:</strong> {goal.value}<br />
-                            <strong className="text-2xl font-bold">Start Date:</strong> {goal.startDate}<br />
-                            <strong className="text-2xl font-bold">End Date:</strong> {goal.endDate}
-                        </p>
-                    </div>
-                ))}
-            </div>
-
-            <div className="goal-message">
-                <p>{userGoals.length === 0 ? 'No goal has been set up for this user.Add some GOALS NOW!!' : 'Set Another Goal'}</p>
-                <button onClick={handleSetGoal}>Set Goal</button>
-            </div>
-            <br></br>
-            {/* Save button for sending goals to backend */}
-            {userGoals.length > 0 && (
-                <div className="save-goals">
-                    <button onClick={handleSaveGoals}>Save Goals</button>
+            {successMessage && (
+                <div className="success-message">
+                    <p>{successMessage}</p>
+                    {!editMode && (
+                        <button onClick={handleEditGoals}>Edit Goals</button>
+                    )}
                 </div>
             )}
+
+
+
+            {/* Render saved goals in edit mode */}
+            {/* Render saved goals in edit or landing mode */}
+            {/* Render saved goals in edit or landing mode */}
+            {(editMode || landingMode) && savedGoals.length > 0 && (
+                <div className="goal-container">
+                    <div className="goal-cards-container">
+                    {savedGoals.map((goal, index) => (
+                        <div key={index} className="goal-card">
+                            <h3>Saved Goal {index + 1}</h3>
+                            <p>
+                                <strong>Type:</strong> {goal.goalType}<br />
+                                <strong>Value:</strong> {goal.targetValue}<br />
+                                <strong>Start Date:</strong> {goal.startDate}<br />
+                                <strong>End Date:</strong> {goal.endDate || 'No end date'}
+                            </p>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+            )}
+
+            {userGoals.userId && !successMessage && (
+                <div className="new-goal-card">
+                    <h3>New Goal</h3>
+                    <p>
+                        <strong>Type:</strong> {userGoals.goalType}<br />
+                        <strong>Value:</strong> {userGoals.targetValue}<br />
+                        <strong>Start Date:</strong> {userGoals.startDate}<br />
+                        <strong>End Date:</strong> {userGoals.endDate || 'No end date'}
+                    </p>
+                    <button onClick={handleSaveGoals}>Save Goal</button>
+                </div>
+            )}
+
+            {/* Display message if no goals are set */}
+            {(editMode || landingMode) && savedGoals.length === 0 && (
+                <div className="goal-message">
+                    <p>No goal has been set up for this user. Set a new goal now!</p>
+                    <button onClick={handleSetGoal}>Set Goal</button>
+                </div>
+            )}
+
+            {/* Trigger the handleLandingGoals function */}
+            
+            <div className="button-container">
+            <h2 className="goals-bar" style={{marginBottom:20}}>Set Your Fitness Goals Or View Your Goals!!</h2>
+                <button className="view-goals-button" onClick={handleLandingGoals}>View Goals</button>
+                <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>
+            </div>
+          
+
 
         </div>
 
