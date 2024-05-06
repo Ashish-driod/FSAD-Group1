@@ -1,10 +1,15 @@
 import React from 'react';
+import GoalSettingCard from './GoalSettingCard';
+import 'App.css';
 
-const GoalSetting = () => (
-    <div>
-        <h1 className="text-2xl font-bold">Goal Setting</h1>
-        <p>Set your goals here.</p>
+const App = () => {
+  return (
+    <div className="app-container">
+      <h1 className="pageTitle" style={{marginBottom:20}}>~Set Your Fitness Goals~</h1>
+
+      <GoalSettingCard />
     </div>
-);
+  );
+};
 
-export default GoalSetting;
+export default App;
