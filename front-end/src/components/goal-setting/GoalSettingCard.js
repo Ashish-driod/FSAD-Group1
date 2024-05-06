@@ -43,7 +43,15 @@ const GoalSettingCard = () => {
     useEffect(() => {
         const fetchSavedGoals = async () => {
             try {
-                const response = await fetch(`/fitness-tracker/getAllGoal`);
+
+                onAuthStateChanged(auth, (user) => {
+                    const uid = user?.uid;
+                    if (uid) {
+                        console.log("user", user);
+                    }
+                })
+
+                const response = await fetch(`/fitness-tracker/getAllGoal?userId=${user?.uid}`);
                 if (response.ok) {
                     const data = await response.json();
                     setSavedGoals(data); // Assuming API response contains a 'goals' array
