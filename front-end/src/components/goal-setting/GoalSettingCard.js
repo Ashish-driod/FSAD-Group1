@@ -20,6 +20,7 @@ const GoalSettingCard = () => {
     const [editMode, setEditMode] = useState(false);
     const [savedGoals, setSavedGoals] = useState([]);
     const [landingMode, setLandingMode] = useState(false);
+    const [successDeleteMessage, setSuccessDeleteMessage] = useState('');
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -68,6 +69,27 @@ const GoalSettingCard = () => {
             fetchSavedGoals();
         }
     }, [editMode, landingMode]);
+
+    //Deleting each goal
+
+    const handleDeleteGoal = async (goalId) => {
+        try {
+            const response = await fetch(`/fitness-tracker/deleteGoal/${goalId}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                // Update savedGoals state after deletion
+                const updatedGoals = savedGoals.filter((goal) => goal.goalId !== goalId);
+                setSavedGoals(updatedGoals);
+                setSuccessDeleteMessage('Goal deleted successfully!!!');
+                console.log('Goal deleted successfully!');
+            } else {
+                console.error('Failed to delete goal:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error deleting goal:', error);
+        }
+    };
 
     const handleSetGoal = () => {
         // Logic to handle goal setting (e.g., show a modal or navigate to a goal setting page)
@@ -239,9 +261,14 @@ const GoalSettingCard = () => {
 
                         </div>
                     )}
+                    {successDeleteMessage && (
+                        <div className="success-message">
+                            <p>{successDeleteMessage}</p>
+                        </div>
+                    )}
                     <div className="goal-cards-container">
                         {savedGoals.map((goal, index) => (
-                            <div key={index} className="goal-card">
+                            <div key={goal.goalId} className="goal-card">
                                 <h3>Saved Goal {index + 1}</h3>
                                 <p>
                                     <strong>Type:</strong> {goal.goalType}<br />
@@ -249,6 +276,7 @@ const GoalSettingCard = () => {
                                     <strong>Start Date:</strong> {goal.startDate}<br />
                                     <strong>End Date:</strong> {goal.endDate || 'No end date'}
                                 </p>
+                                <button onClick={() => handleDeleteGoal(goal.goalId)}>Delete Goal</button>
                             </div>
                         ))}
                     </div>
