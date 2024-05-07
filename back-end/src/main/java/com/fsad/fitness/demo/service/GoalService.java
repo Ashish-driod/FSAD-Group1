@@ -24,9 +24,18 @@ public class GoalService {
         return goalRepository.save(goal);
     }
 
+    // public List<Goal> getAllGoals() {
+    //     return goalRepository.findAll();
+    // }
+
     public List<Goal> getAllGoals() {
         return goalRepository.findAll();
     }
+
+    public List<Goal> getAllGoalsByUserId(String userId) {
+        return goalRepository.findByUserId(userId);
+    }
+
 
     public Optional<Goal> getGoalById(int goalId) {
         return goalRepository.findById(goalId);

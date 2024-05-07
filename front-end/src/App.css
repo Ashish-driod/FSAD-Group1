@@ -698,3 +698,12 @@ button:hover {
     margin-bottom: 20px;
     background-color: #f9f9f9;
 }
+
+.success-message {
+    border: 1px solid #4caf50; /* Green border */
+    background-color: #e7f3e4; /* Light green background */
+    padding: 15px;
+    margin-bottom: 20px;
+    font-weight: bold; /* Make text bold */
+    font-size: 18px; /* Set font size to 18 pixels */
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'App.css';
 import { useUserCredential } from 'contexts/UserContext';
-import { getAuth, onAuthStateChanged  } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 
 
@@ -27,7 +27,7 @@ const GoalSettingCard = () => {
     onAuthStateChanged(auth, (user) => {
         const uid = user?.uid;
         if (uid) {
-            console.log("user" , user);
+            console.log("user", user);
         }
     })
 
@@ -43,7 +43,15 @@ const GoalSettingCard = () => {
     useEffect(() => {
         const fetchSavedGoals = async () => {
             try {
-                const response = await fetch(`/fitness-tracker/getAllGoal`);
+
+                onAuthStateChanged(auth, (user) => {
+                    const uid = user?.uid;
+                    if (uid) {
+                        console.log("user", user);
+                    }
+                })
+
+                const response = await fetch(`/fitness-tracker/getAllGoal?userId=${user?.uid}`);
                 if (response.ok) {
                     const data = await response.json();
                     setSavedGoals(data); // Assuming API response contains a 'goals' array
@@ -92,7 +100,7 @@ const GoalSettingCard = () => {
         onAuthStateChanged(auth, (user) => {
             const uid = user?.uid;
             if (uid) {
-                console.log("user" , user);
+                console.log("user", user);
             }
         })
 
@@ -220,34 +228,29 @@ const GoalSettingCard = () => {
                 </div>
             )}
 
-            {successMessage && (
-                <div className="success-message">
-                    <p>{successMessage}</p>
-                    {!editMode && (
-                        <button onClick={handleEditGoals}>Edit Goals</button>
-                    )}
-                </div>
-            )}
-
-
-
             {/* Render saved goals in edit mode */}
             {/* Render saved goals in edit or landing mode */}
             {/* Render saved goals in edit or landing mode */}
             {(editMode || landingMode) && savedGoals.length > 0 && (
                 <div className="goal-container">
-                    <div className="goal-cards-container">
-                    {savedGoals.map((goal, index) => (
-                        <div key={index} className="goal-card">
-                            <h3>Saved Goal {index + 1}</h3>
-                            <p>
-                                <strong>Type:</strong> {goal.goalType}<br />
-                                <strong>Value:</strong> {goal.targetValue}<br />
-                                <strong>Start Date:</strong> {goal.startDate}<br />
-                                <strong>End Date:</strong> {goal.endDate || 'No end date'}
-                            </p>
+                    {successMessage && (
+                        <div className="success-message">
+                            <p>{successMessage}</p>
+
                         </div>
-                    ))}
+                    )}
+                    <div className="goal-cards-container">
+                        {savedGoals.map((goal, index) => (
+                            <div key={index} className="goal-card">
+                                <h3>Saved Goal {index + 1}</h3>
+                                <p>
+                                    <strong>Type:</strong> {goal.goalType}<br />
+                                    <strong>Value:</strong> {goal.targetValue}<br />
+                                    <strong>Start Date:</strong> {goal.startDate}<br />
+                                    <strong>End Date:</strong> {goal.endDate || 'No end date'}
+                                </p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
@@ -274,13 +277,19 @@ const GoalSettingCard = () => {
             )}
 
             {/* Trigger the handleLandingGoals function */}
-            
+
             <div className="button-container">
-            <h2 className="goals-bar" style={{marginBottom:20}}>Set Your Fitness Goals Or View Your Goals!!</h2>
+                {successMessage && (
+                    <div className="success-message">
+                        <p>{successMessage}</p>
+
+                    </div>
+                )}
+                <h2 className="goals-bar" style={{ marginBottom: 20 }}>Set Your Fitness Goals Or View Your Goals!!</h2>
                 <button className="view-goals-button" onClick={handleLandingGoals}>View Goals</button>
                 <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>
             </div>
-          
+
 
 
         </div>

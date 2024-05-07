@@ -41,11 +41,19 @@ public class FitnessTrackerController {
     }
 
     // New endpoint to get all goals
+    // @GetMapping("/getAllGoal")
+    // public ResponseEntity<List<Goal>> getAllGoals() {
+    //     List<Goal> goals = goalService.getAllGoals();
+    //     return ResponseEntity.ok(goals);
+    // }
+
     @GetMapping("/getAllGoal")
-    public ResponseEntity<List<Goal>> getAllGoals() {
-        List<Goal> goals = goalService.getAllGoals();
-        return ResponseEntity.ok(goals);
+    public ResponseEntity<List<Goal>> getAllGoals(@RequestParam("userId") String userId) {
+     List<Goal> goals = goalService.getAllGoalsByUserId(userId);
+    return ResponseEntity.ok(goals);
     }
+
+    
 
     // New endpoint to get a goal by ID
     @GetMapping("/getGoal/{goalId}")
