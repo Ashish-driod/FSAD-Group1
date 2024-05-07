@@ -12,28 +12,19 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "Activities")
-public class Activity{
+@Table(name = "Activities_Goals_Mapping")
+public class ActivitiesGoalsMapping{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "activity_goal_mapping_id")
+    private Integer activityGoalMappingId;
+    
     @Column(name = "activity_id")
-    private int activityId;
-
-    @Column(name = "user_id", nullable = false)
-    private String userId;
-
-
-    @Column(name = "activity_type", nullable = false, length = 100)
-    private String activityType;
-
-
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
-
-
-    @Column(name = "calories_burned", nullable = false)
-    private Integer caloriesBurned;
+    private Integer activityId;
+    
+    @Column(name = "goal_id")
+    private Integer goalId;
 
     // Do not manually set 'created_At' and 'modified_At' fields
     @JsonProperty("createdAt")
@@ -44,44 +35,28 @@ public class Activity{
     @Column(name = "modified_At", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime modifiedAt;
 
-	public int getActivityId() {
+	public Integer getActivityGoalMappingId() {
+		return activityGoalMappingId;
+	}
+
+	public void setActivityGoalMappingId(Integer activityGoalMappingId) {
+		this.activityGoalMappingId = activityGoalMappingId;
+	}
+
+	public Integer getActivityId() {
 		return activityId;
 	}
 
-	public void setActivityId(int activityId) {
+	public void setActivityId(Integer activityId) {
 		this.activityId = activityId;
 	}
 
-	public String getUserId() {
-		return userId;
+	public Integer getGoalId() {
+		return goalId;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getActivityType() {
-		return activityType;
-	}
-
-	public void setActivityType(String activityType) {
-		this.activityType = activityType;
-	}
-
-	public Integer getDuration() {
-		return duration;
-	}
-
-	public void setDuration(Integer duration) {
-		this.duration = duration;
-	}
-
-	public Integer getCaloriesBurned() {
-		return caloriesBurned;
-	}
-
-	public void setCaloriesBurned(Integer caloriesBurned) {
-		this.caloriesBurned = caloriesBurned;
+	public void setGoalId(Integer goalId) {
+		this.goalId = goalId;
 	}
 
 	public LocalDateTime getCreatedAt() {
@@ -100,8 +75,5 @@ public class Activity{
 		this.modifiedAt = modifiedAt;
 	}
 
-    // Getters and setters
-    
-
-
+	
 }
