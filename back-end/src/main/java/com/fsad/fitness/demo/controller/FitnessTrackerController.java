@@ -76,18 +76,37 @@ public class FitnessTrackerController {
     }
 
     // New endpoint to add a activity
-    @Transactional
-    @PostMapping("/addActivity")
-    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
-        Activity activityEntity = activityService.addActivity(activity);
-        return ResponseEntity.ok(activityEntity);
+    @SuppressWarnings("unused")
+	@Transactional
+    @PostMapping("/addActivity/{goalId}")
+    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity, @PathVariable Integer goalId) {
+    	try
+    	{
+	    	if (Objects.isNull(goalId)) {
+				throw new IllegalArgumentException("Goal Id Present in Path");
+			}
+	        Activity activityEntity = activityService.addActivity(activity, goalId);
+	        return ResponseEntity.ok(activityEntity);
+    	} catch (Exception ex) {
+			// TODO: handle exception
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
     }
 
     // New endpoint to get all activities
-    @GetMapping("/getAllActivities")
-    public ResponseEntity<List<Activity>> getAllActivities() {
-        List<Activity> activities = activityService.getAllActivities();
-        return ResponseEntity.ok(activities);
+    @GetMapping("/getAllActivities/{goalId}")
+    public ResponseEntity<List<Activity>> getAllActivities( @PathVariable Integer goalId) {
+    	try
+    	{
+	    	if (Objects.isNull(goalId)) {
+				throw new IllegalArgumentException("Goal Id Present in Path");
+			}
+	        List<Activity> activities = activityService.getAllActivities(goalId);
+	        return ResponseEntity.ok(activities);
+    	} catch (Exception ex) {
+			// TODO: handle exception
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
     }
 
     // New endpoint to get a activity by ID
@@ -109,12 +128,27 @@ public class FitnessTrackerController {
     // New endpoint to delete a activity by ID
     @SuppressWarnings("unused")
 	@DeleteMapping("/deleteActivity/{activityId}")
-    public ResponseEntity<Void> deleteActivity(@PathVariable int activityId) {
+    public ResponseEntity<Void> deleteActivityById(@PathVariable Integer activityId) {
         try {
         	if (Objects.isNull(activityId)) {
     			throw new IllegalArgumentException("No Activity Id Present");
     		}
             activityService.deleteActivityById(activityId);
+            return ResponseEntity.noContent().build(); // Return no content on successful deletion
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        }
+    }
+    
+ // New endpoint to delete a activity by ID
+    @SuppressWarnings("unused")
+	@DeleteMapping("/deleteActivity/{goalId}")
+    public ResponseEntity<Void> deleteActivityByGoalId(@PathVariable Integer goalId) {
+        try {
+        	if (Objects.isNull(goalId)) {
+    			throw new IllegalArgumentException("No Goal Id Present");
+    		}
+            activityService.deleteActivityByGoalId(goalId);
             return ResponseEntity.noContent().build(); // Return no content on successful deletion
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
