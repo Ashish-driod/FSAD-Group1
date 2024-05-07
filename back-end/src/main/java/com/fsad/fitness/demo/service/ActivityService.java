@@ -67,17 +67,14 @@ public class ActivityService {
     
     @Transactional
     public void deleteActivityByGoalId(int goalId) {
-    	Optional<Activity> activity = activityRepository.findById(goalId);
-        if (Objects.nonNull(activity)) {
-	    	List<ActivitiesGoalsMapping> activitiesGoalsMappings = activitiesGoalsMappingRepository.getAllActivitiesGoalsMappingsByGoalsId(goalId);
-	    	if (Objects.nonNull(activitiesGoalsMappings) && !activitiesGoalsMappings.isEmpty()) {
-	    		List<Integer> activitiesGoalsMappingIds = activitiesGoalsMappings.stream().map(ActivitiesGoalsMapping::getActivityGoalMappingId).collect(Collectors.toList());
-	    		List<Integer> activitiyIds = activitiesGoalsMappings.stream().map(ActivitiesGoalsMapping::getActivityId).collect(Collectors.toList());
-	    		activitiesGoalsMappingRepository.deleteAllById(activitiesGoalsMappingIds);
-	            activityRepository.deleteAllById(activitiyIds);
-	    	}
-        } else {
-            throw new DataException("Activity not found", null);
-        }
+    	List<ActivitiesGoalsMapping> activitiesGoalsMappings = activitiesGoalsMappingRepository.getAllActivitiesGoalsMappingsByGoalsId(goalId);
+    	if (Objects.nonNull(activitiesGoalsMappings) && !activitiesGoalsMappings.isEmpty()) {
+    		List<Integer> activitiesGoalsMappingIds = activitiesGoalsMappings.stream().map(ActivitiesGoalsMapping::getActivityGoalMappingId).collect(Collectors.toList());
+    		List<Integer> activitiyIds = activitiesGoalsMappings.stream().map(ActivitiesGoalsMapping::getActivityId).collect(Collectors.toList());
+    		activitiesGoalsMappingRepository.deleteAllById(activitiesGoalsMappingIds);
+            activityRepository.deleteAllById(activitiyIds);
+    	} else {
+    		throw new DataException("Activity not found", null);
+    	}
     }
 }
