@@ -19,7 +19,7 @@ const GoalSettingCard = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [savedGoals, setSavedGoals] = useState([]);
-    const [landingMode, setLandingMode] = useState(false);
+    const [landingMode, setLandingMode] = useState(true);
     const [successDeleteMessage, setSuccessDeleteMessage] = useState('');
 
     const auth = getAuth();
@@ -102,6 +102,11 @@ const GoalSettingCard = () => {
         // Reset form fields
         resetForm();
 
+    };
+
+    const handleCancelNewGoal = () => {
+        // Reset userGoals to clear the new goal data
+        setUserGoals({});
     };
 
     const resetForm = () => {
@@ -253,6 +258,19 @@ const GoalSettingCard = () => {
             {/* Render saved goals in edit mode */}
             {/* Render saved goals in edit or landing mode */}
             {/* Render saved goals in edit or landing mode */}
+            {userGoals.userId && !successMessage && (
+                <div className="new-goal-card">
+                    <h3>New Goal</h3>
+                    <p>
+                        <strong>Type:</strong> {userGoals.goalType}<br />
+                        <strong>Value:</strong> {userGoals.targetValue}<br />
+                        <strong>Start Date:</strong> {userGoals.startDate}<br />
+                        <strong>End Date:</strong> {userGoals.endDate || 'No end date'}
+                    </p>
+                    <button onClick={handleSaveGoals}>Save Goal</button>
+                    <button onClick={handleCancelNewGoal}>Cancel</button>
+                </div>
+            )}
             {(editMode || landingMode) && savedGoals.length > 0 && (
                 <div className="goal-container">
                     {successMessage && (
@@ -283,18 +301,7 @@ const GoalSettingCard = () => {
                 </div>
             )}
 
-            {userGoals.userId && !successMessage && (
-                <div className="new-goal-card">
-                    <h3>New Goal</h3>
-                    <p>
-                        <strong>Type:</strong> {userGoals.goalType}<br />
-                        <strong>Value:</strong> {userGoals.targetValue}<br />
-                        <strong>Start Date:</strong> {userGoals.startDate}<br />
-                        <strong>End Date:</strong> {userGoals.endDate || 'No end date'}
-                    </p>
-                    <button onClick={handleSaveGoals}>Save Goal</button>
-                </div>
-            )}
+           
 
             {/* Display message if no goals are set */}
             {(editMode || landingMode) && savedGoals.length === 0 && (
@@ -307,14 +314,6 @@ const GoalSettingCard = () => {
             {/* Trigger the handleLandingGoals function */}
 
             <div className="button-container">
-                {successMessage && (
-                    <div className="success-message">
-                        <p>{successMessage}</p>
-
-                    </div>
-                )}
-                <h2 className="goals-bar" style={{ marginBottom: 20 }}>Set Your Fitness Goals Or View Your Goals!!</h2>
-                <button className="view-goals-button" onClick={handleLandingGoals}>View Goals</button>
                 <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>
             </div>
 
