@@ -13,6 +13,9 @@ const SidePanel = () => (
             <Link to="/dashboard/activity-tracking" className="text-gray-700 hover:text-indigo-600">
                 Activity Tracking
             </Link>
+            <Link to="/dashboard/workout-plans" className="text-gray-700 hover:text-indigo-600">
+                Workout Plans
+            </Link>
         </div>
     </div>
 );

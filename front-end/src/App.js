@@ -10,6 +10,7 @@ import ActivityTracking from 'components/activity-tracking/ActivityTracking';
 import ProtectedRoute from 'components/protected-route/ProtectedRoute'; // Your protected route component
 import { UserCredentialProvider } from 'contexts/UserContext'; // Import UserProvider
 import { getAuth, onAuthStateChanged  } from 'firebase/auth';
+import WorkoutPlans from "components/workout-plans/WorkoutPlans";
 
 
 
@@ -38,6 +39,7 @@ const App = () => {
                         <Route path="home" element={<Home />} />
                         <Route path="goal-setting" element={<GoalSetting />} />
                         <Route path="activity-tracking" element={<ActivityTracking />} />
+                        <Route path="workout-plans" element={<WorkoutPlans />} />
                     </Route>
                 </Routes>
             </UserCredentialProvider>
