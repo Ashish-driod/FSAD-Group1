@@ -1,12 +1,15 @@
 package com.fsad.fitness.demo.controller;
 
 
-import com.fsad.fitness.demo.model.Activity;
-import com.fsad.fitness.demo.model.Goal; // Import Goal model
+import com.fsad.fitness.demo.model.*;
 import com.fsad.fitness.demo.repository.UserRepository;
+import com.fsad.fitness.demo.repository.UserWorkoutPlanRepository;
+import com.fsad.fitness.demo.repository.WorkoutPlanExerciseRepository;
 import com.fsad.fitness.demo.service.ActivityService;
+import com.fsad.fitness.demo.service.ExerciseService;
 import com.fsad.fitness.demo.service.GoalService; // Import Goal service
 
+import com.fsad.fitness.demo.service.WorkoutPlanService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,10 +31,72 @@ public class FitnessTrackerController {
 
     @Autowired
     GoalService goalService; // Add the GoalService injection
-    
-    @Autowired 
+
+    @Autowired
     ActivityService activityService; // Add ActivityService injection
 
+    @Autowired
+    ExerciseService exerciseService;
+
+    @Autowired
+    WorkoutPlanService workoutPlanService;
+
+    @Autowired
+    WorkoutPlanExerciseRepository workoutPlanExerciseRepository;
+
+    @Autowired
+    UserWorkoutPlanRepository userWorkoutPlanRepository;
+
+
+
+    @GetMapping("/getWorkoutPlans/{workoutPlanId}")
+    public ResponseEntity<HttpStatus> addWorkoutPlanToUser(@RequestParam("userId") String userId, @PathVariable int workoutPlanId){
+        UserWorkoutPlan userWorkoutPlan = new UserWorkoutPlan();
+        userWorkoutPlan.setUserId(userId);
+        userWorkoutPlan.setWorkoutPlanId(workoutPlanId);
+        if(userWorkoutPlanRepository.save(userWorkoutPlan)!=null){
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/getWorkoutPlan")
+    public ResponseEntity<List<WorkoutPlanDetails>> getWorkoutPlanByUserId(@RequestParam("userId") String userId){
+        List<WorkoutPlanDetails> workoutPlanDetails = new ArrayList<>();
+
+        List<WorkoutPlan> userWorkoutPlanList = workoutPlanService.getWorkoutPlansByUserId(userId);
+        for(WorkoutPlan wP: userWorkoutPlanList){
+            WorkoutPlanDetails wPD = new WorkoutPlanDetails();
+
+            wPD.setWorkoutPlanName(wP.getName());
+            wPD.setWorkoutPlanDescription(wP.getDescription());
+            wPD.setWorkoutPlanId(wP.getId());
+
+            wPD.setExerciseList(exerciseService.getAllExercisesByWorkoutPlanId(wP.getId()));
+            workoutPlanDetails.add(wPD);
+        }
+        return ResponseEntity.ok(workoutPlanDetails);
+
+    }
+
+
+    @GetMapping("/getWorkoutPlans")
+    public ResponseEntity<List<WorkoutPlanDetails>> getAllWorkoutPlanDetails(){
+        List<WorkoutPlanDetails> workoutPlanDetails = new ArrayList<>();
+
+        List<WorkoutPlan> workoutPlan = workoutPlanService.getAllWorkoutPlans();
+        for(WorkoutPlan wP : workoutPlan){
+            WorkoutPlanDetails wPD = new WorkoutPlanDetails();
+
+            wPD.setWorkoutPlanName(wP.getName());
+            wPD.setWorkoutPlanDescription(wP.getDescription());
+            wPD.setWorkoutPlanId(wP.getId());
+
+            wPD.setExerciseList(exerciseService.getAllExercisesByWorkoutPlanId(wP.getId()));
+            workoutPlanDetails.add(wPD);
+        }
+        return ResponseEntity.ok(workoutPlanDetails);
+    }
 
     // New endpoint to add a goal
     @Transactional
@@ -53,7 +119,7 @@ public class FitnessTrackerController {
     return ResponseEntity.ok(goals);
     }
 
-    
+
 
     // New endpoint to get a goal by ID
     @GetMapping("/getGoal/{goalId}")
@@ -104,7 +170,6 @@ public class FitnessTrackerController {
 	        List<Activity> activities = activityService.getAllActivities(goalId);
 	        return ResponseEntity.ok(activities);
     	} catch (Exception ex) {
-			// TODO: handle exception
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
 		}
     }
@@ -120,11 +185,10 @@ public class FitnessTrackerController {
 			}
 	    	return ResponseEntity.ok(activityService.getActivityById(activityId));
 		} catch (Exception ex) {
-			// TODO: handle exception
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
 		}
     }
-    
+
     // New endpoint to delete a activity by ID
     @SuppressWarnings("unused")
 	@DeleteMapping("/deleteActivity/{activityId}")
@@ -139,7 +203,7 @@ public class FitnessTrackerController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         }
     }
-    
+
  // New endpoint to delete a activity by ID
     @SuppressWarnings("unused")
 	@DeleteMapping("/deleteActivity/{goalId}")
