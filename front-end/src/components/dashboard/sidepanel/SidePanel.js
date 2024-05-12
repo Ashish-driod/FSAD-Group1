@@ -5,6 +5,9 @@ import {WavesIcon,HomeIcon,Goal,BriefcaseIcon,CalendarIcon,TextIcon,ClipboardLis
 import { getAuth, signOut } from 'firebase/auth';
 
 const SidePanel = () => {
+
+    console.log('testing');
+
     const [activeLink, setActiveLink] = useState('home');
 
     const auth = getAuth();
