@@ -21,6 +21,8 @@ const GoalSettingCard = () => {
     const [savedGoals, setSavedGoals] = useState([]);
     const [landingMode, setLandingMode] = useState(true);
     const [successDeleteMessage, setSuccessDeleteMessage] = useState('');
+    const [selectedGoalForShare, setSelectedGoalForShare] = useState(null);
+    const [showShareModal, setShowShareModal] = useState(false);
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -188,6 +190,31 @@ const GoalSettingCard = () => {
         setSuccessMessage('');
     };
 
+    const handleShareGoal = (goal) => {
+        setSelectedGoalForShare(goal);
+        setShowShareModal(true);
+    };
+
+    const handleShareOption = (option) => {
+        if (option === 'Email') {
+            // Prepare the email content
+            const subject = `Fitness Goal: ${selectedGoalForShare.goalType}`;
+            const body = `Dear recipient,\n\nI wanted to share my fitness goal with you:\n\nType: ${selectedGoalForShare.goalType}\nValue: ${selectedGoalForShare.targetValue}\nStart Date: ${selectedGoalForShare.startDate}\nEnd Date: ${selectedGoalForShare.endDate || 'No end date'}\n\nBest regards,\n[Your Name]`;
+    
+            // Construct the mailto URL with subject and body parameters
+            const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+            // Open the mailto URL to initiate composing an email
+            window.location.href = mailtoUrl;
+        } else {
+            console.log(`Sharing ${selectedGoalForShare.goalType} via ${option}`);
+            // Implement other share options as needed
+        }
+    
+        // Close the share modal
+        setShowShareModal(false);
+    };
+
     return (
         <div className="goal-setting-container">
             {showModal && (
@@ -295,13 +322,30 @@ const GoalSettingCard = () => {
                                     <strong>End Date:</strong> {goal.endDate || 'No end date'}
                                 </p>
                                 <button onClick={() => handleDeleteGoal(goal.goalId)}>Delete Goal</button>
+                                <button onClick={() => handleShareGoal(goal)}>Share Goal</button>
                             </div>
                         ))}
                     </div>
                 </div>
             )}
 
-           
+            {showShareModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setShowShareModal(false)}>&times;</span>
+                        <h2>Share Goal</h2>
+                        <p>Share your goal using:</p>
+                        <ul>
+                            <button onClick={() => handleShareOption('Email')}>Email</button>
+                            {/* <button onClick={() => handleShareOption('Facebook')}>Facebook</button>
+                            <button onClick={() => handleShareOption('Twitter')}>Twitter</button> */}
+                            {/* Add more share options as needed */}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+
 
             {/* Display message if no goals are set */}
             {(editMode || landingMode) && savedGoals.length === 0 && (
