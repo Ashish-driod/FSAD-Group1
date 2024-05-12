@@ -13,6 +13,6 @@ public interface UserWorkoutPlanRepository extends JpaRepository<UserWorkoutPlan
 
     UserWorkoutPlan findByUserIdAndWorkoutPlanId(String userId,int workoutPlanId);
 
-    void deleteByUserIdAndWorkoutPlanId(String userId,int workoutPlanId);
+    UserWorkoutPlan deleteUserWorkoutPlanByUserIdAndWorkoutPlanId(String userId,int workoutPlanId);
 
 }

@@ -66,10 +66,10 @@ public class FitnessTrackerController {
 
     @DeleteMapping("/deleteWorkoutPlan/{workoutPlanId}")
     public ResponseEntity<String> removeWorkoutPlanFromUser(@RequestBody UserWorkoutPlan userWorkoutPlan, @PathVariable int workoutPlanId){
-
-        if(userWorkoutPlanRepository.findByUserIdAndWorkoutPlanId(userWorkoutPlan.getUserId(),workoutPlanId) != null){
+        UserWorkoutPlan removeUserWorkoutPlan;
+        if((removeUserWorkoutPlan = userWorkoutPlanRepository.findByUserIdAndWorkoutPlanId(userWorkoutPlan.getUserId(),workoutPlanId)) != null){
             try{
-                userWorkoutPlanRepository.deleteByUserIdAndWorkoutPlanId(userWorkoutPlan.getUserId(),workoutPlanId);
+                userWorkoutPlanRepository.deleteById(removeUserWorkoutPlan.getUserWorkoutPlanId());
             }catch (Exception e){
                 return new ResponseEntity<>("Delete Workout Plan failed",HttpStatus.valueOf(500));
             }
