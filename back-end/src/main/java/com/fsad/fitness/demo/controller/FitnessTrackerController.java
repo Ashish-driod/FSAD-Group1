@@ -49,15 +49,36 @@ public class FitnessTrackerController {
 
 
 
-    @GetMapping("/getWorkoutPlans/{workoutPlanId}")
-    public ResponseEntity<HttpStatus> addWorkoutPlanToUser(@RequestParam("userId") String userId, @PathVariable int workoutPlanId){
-        UserWorkoutPlan userWorkoutPlan = new UserWorkoutPlan();
-        userWorkoutPlan.setUserId(userId);
-        userWorkoutPlan.setWorkoutPlanId(workoutPlanId);
-        if(userWorkoutPlanRepository.save(userWorkoutPlan)!=null){
-            return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping("/mapWorkoutPlans/{workoutPlanId}")
+    public ResponseEntity<String> addWorkoutPlanToUser(@RequestBody UserWorkoutPlan userWorkoutPlan, @PathVariable int workoutPlanId){
+        UserWorkoutPlan newUserWorkoutPlan = new UserWorkoutPlan();
+        newUserWorkoutPlan.setUserId(userWorkoutPlan.getUserId());
+        newUserWorkoutPlan.setWorkoutPlanId(workoutPlanId);
+        if(validateIfPlanExistsForUser(newUserWorkoutPlan)) {
+            if (userWorkoutPlanRepository.save(newUserWorkoutPlan) != null) {
+                return new ResponseEntity<>("Workout Plan added to profile.",HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return new ResponseEntity<>("Workout Plan already added.",HttpStatus.valueOf(500));
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+//    @DeleteMapping("/workoutPlans/{workoutPlanId}")
+//    public ResponseEntity<HttpStatus> removeMappedWorkoutPlan(@RequestBody UserWorkoutPlan userWorkoutPlan, @PathVariable int workoutPlanId){
+//
+//    }
+
+    private Boolean validateIfPlanExistsForUser(UserWorkoutPlan newUserWorkoutPlan){
+        List<UserWorkoutPlan> list = userWorkoutPlanRepository.findByUserId(newUserWorkoutPlan.getUserId());
+        if(list == null){
+            return true;
+        }
+        for(UserWorkoutPlan userWorkoutPlan : list){
+            if(userWorkoutPlan.getWorkoutPlanId() == newUserWorkoutPlan.getWorkoutPlanId())
+                return false;
+        }
+        return true;
     }
 
     @GetMapping("/getWorkoutPlan")
