@@ -1,9 +1,10 @@
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'], // Adjust based on your project structure
-  theme: {
-    extend: {},
-  },
+  content: ['./src/**/*.{js,ts,jsx,tsx}',
+    'node_modules/daisyui/dist/**/*.js',
+    'node_modules/react-daisyui/dist/**/*.js',
+  ],
   plugins: [
-    require('@tailwindcss/forms'), // Include the forms plugin
+    require('@tailwindcss/forms'),
+    require('daisyui')// Include the forms plugin
   ],
 };

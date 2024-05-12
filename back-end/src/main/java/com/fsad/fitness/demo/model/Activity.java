@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Activity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "activity_id")
     private int activityId;
 

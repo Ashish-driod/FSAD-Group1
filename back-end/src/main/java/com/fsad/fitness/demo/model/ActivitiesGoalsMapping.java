@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class ActivitiesGoalsMapping{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "activity_goal_mapping_id")
     private Integer activityGoalMappingId;
     
