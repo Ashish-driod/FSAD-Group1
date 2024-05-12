@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import 'App.css';
-const imagebase = require('assets/RegistrationPage.png');
-const imagebase2 = require('assets/Collage.jpg');
+import imagebase2 from 'assets/Collage.jpg';
+
+
 
 
 
 const Home = () => (
     <div>
-        <h1  className="text-3xl font-bold background-image align-items: center">Home</h1>
-        <p style={{ color: 'red' }} className="font-bold text-2xl">Welcome to the dashboard!!!</p>
-        <img src={imagebase2} alt="Fitness Tracker" />
-      <Footer />
+      {/*  <h1  className="text-3xl font-bold background-image align-items: center">Home</h1>*/}
+      {/*  <p style={{ color: 'red' }} className="font-bold text-2xl">Welcome to the dashboard!!!</p>*/}
+      {/*  <img src={imagebase2} alt="Fitness Tracker" />*/}
+      {/*<Footer />*/}
     </div>
 );
 

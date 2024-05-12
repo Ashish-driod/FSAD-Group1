@@ -10,12 +10,8 @@ import ActivityTracking from 'components/activity-tracking/ActivityTracking';
 import ProtectedRoute from 'components/protected-route/ProtectedRoute'; // Your protected route component
 import { UserCredentialProvider } from 'contexts/UserContext'; // Import UserProvider
 import { getAuth, onAuthStateChanged  } from 'firebase/auth';
-<<<<<<< Updated upstream
 import WorkoutPlans from "components/workout-plans/WorkoutPlans";
-=======
 import SocialMedia from 'components/social-media/SocialMediaConnect';
->>>>>>> Stashed changes
-
 
 
 const App = () => {
@@ -43,11 +39,8 @@ const App = () => {
                         <Route path="home" element={<Home />} />
                         <Route path="goal-setting" element={<GoalSetting />} />
                         <Route path="activity-tracking" element={<ActivityTracking />} />
-<<<<<<< Updated upstream
                         <Route path="workout-plans" element={<WorkoutPlans />} />
-=======
                         <Route path="social-media" element={<SocialMedia />} />
->>>>>>> Stashed changes
                     </Route>
                 </Routes>
             </UserCredentialProvider>
