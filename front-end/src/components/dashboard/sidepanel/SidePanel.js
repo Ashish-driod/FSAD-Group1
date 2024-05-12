@@ -34,7 +34,7 @@ const SidePanel = () => {
                 <Link className={`flex items-center space-x-3 text-white p-2 rounded-md ${activeLink === 'goals' ? 'active' : ''}`} to={'/dashboard/goal-setting'}
                       onClick={() => handleLinkClick('goals')}>
                     <Goal className="h-5 w-5"/>
-                    <span>Gaols</span>
+                    <span>Goals</span>
                 </Link>
                 <Link className={`flex items-center space-x-3 text-white p-2 rounded-md ${activeLink === 'activity' ? 'active' : ''}`} to={'/dashboard/activity-tracking'}
                       onClick={() => handleLinkClick('activity')}>
