@@ -13,8 +13,13 @@ const SidePanel = () => (
             <Link to="/dashboard/activity-tracking" className="text-gray-700 hover:text-indigo-600">
                 Activity Tracking
             </Link>
+<<<<<<< Updated upstream
             <Link to="/dashboard/workout-plans" className="text-gray-700 hover:text-indigo-600">
                 Workout Plans
+=======
+            <Link to="/dashboard/social-media" className="text-gray-700 hover:text-indigo-600">
+                Social Media
+>>>>>>> Stashed changes
             </Link>
         </div>
     </div>
