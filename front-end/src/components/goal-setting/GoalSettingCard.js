@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import 'App.css';
 import { useUserCredential } from 'contexts/UserContext';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { Button, Modal, Input, Select, Card } from "react-daisyui";
+
 
 
 
@@ -23,6 +25,8 @@ const GoalSettingCard = () => {
     const [successDeleteMessage, setSuccessDeleteMessage] = useState('');
     const [selectedGoalForShare, setSelectedGoalForShare] = useState(null);
     const [showShareModal, setShowShareModal] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [reloadGoals, setReloadGoals] = useState(false);
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -65,12 +69,15 @@ const GoalSettingCard = () => {
             } catch (error) {
                 console.error('Error fetching saved goals:', error);
             }
+            finally {
+                setLoading(false); // Set loading to false when done fetching
+            }
         };
 
         if (editMode || landingMode) {
             fetchSavedGoals();
         }
-    }, [editMode, landingMode]);
+    }, [editMode, landingMode, reloadGoals]);
 
     //Deleting each goal
 
@@ -169,6 +176,7 @@ const GoalSettingCard = () => {
                 console.log('Goals sent to backend successfully!');
                 // Optionally, clear userGoals state after successful submission
                 setSuccessMessage('Goals saved successfully!!!!');
+                setReloadGoals((prevState) => !prevState);
                 setUserGoals({});
             } else {
                 console.error('Failed to send goals to backend:', response.statusText);
@@ -200,17 +208,17 @@ const GoalSettingCard = () => {
             // Prepare the email content
             const subject = `Fitness Goal: ${selectedGoalForShare.goalType}`;
             const body = `Dear recipient,\n\nI wanted to share my fitness goal with you:\n\nType: ${selectedGoalForShare.goalType}\nValue: ${selectedGoalForShare.targetValue}\nStart Date: ${selectedGoalForShare.startDate}\nEnd Date: ${selectedGoalForShare.endDate || 'No end date'}\n\nBest regards,\n[Your Name]`;
-    
+
             // Construct the mailto URL with subject and body parameters
             const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
+
             // Open the mailto URL to initiate composing an email
             window.location.href = mailtoUrl;
         } else {
             console.log(`Sharing ${selectedGoalForShare.goalType} via ${option}`);
             // Implement other share options as needed
         }
-    
+
         // Close the share modal
         setShowShareModal(false);
     };
@@ -218,68 +226,96 @@ const GoalSettingCard = () => {
     return (
         <div className="goal-setting-container">
             {showModal && (
-                <div className="modal">
+                <dialog open={showModal} className="modal_goal" onClose={handleCloseModal}>
+
                     <div className="modal-content">
-                        <span className="close" onClick={handleCloseModal}>&times;</span>
+                        <span className="close" onClick={handleCloseModal} style={{ fontSize: '24px', cursor: 'pointer' }}>&times;</span>
                         <h2 className="pageTitle" style={{ marginBottom: 20 }}>Set Goal</h2>
                         <form onSubmit={handleFormSubmit}>
-                            <label className="text-2xl font-bold goalTypeContainer bodyBorder" style={{ color: 'black' }}>
-                                Goal Type:
-                                <select
-                                    value={goalType}
-                                    onChange={(e) => setGoalType(e.target.value)}
-                                    required
-                                >
-                                    <option className="goalTypeContainer"
-                                        value="">Select Goal Type</option>
+                            <div className="grid grid-cols-2 items-center gap-4">
+                                <label className=" text-2xl font-bold text-center" htmlFor="goal">
+                                    Goal Type:
+                                </label>
+                                <Select name={'goalType'} value={goalType} onChange={(e) => setGoalType(e.target.value)}
+                                    required>
+                                    <option className="text-md leading-6 text-gray-900" value={'default'} disabled>
+                                        Please pick a Goal Type
+                                    </option>
                                     {goalTypeOptions.map((option) => (
                                         <option key={option} value={option}>
                                             {option}
                                         </option>
                                     ))}
-                                </select>
-                            </label>
+                                </Select>
+                            </div>
+
+
                             <br />
-                            <label className="text-2xl font-bold goalTypeContainer bodyBorder" style={{ color: 'black' }}>
-                                Goal Value:
-                                <input
-                                    type="text"
-                                    value={goalValue}
-                                    style={{ color: 'black' }}
-                                    className="goalTypeContainer dateInput"
+                            <div className="grid grid-cols-2 items-center gap-4">
+                                <label className="text-2xl font-bold text-center" htmlFor="goalValue">
+                                    Goal Value:
+                                </label>
+                                <Input type='text' value={goalValue} placeholder={'Add Target Value'}
                                     onChange={(e) => setGoalValue(e.target.value)}
+                                    color={'neutral'}
+                                    className="text-md leading-6 text-gray-900"
+                                    style={{
+                                        backgroundColor: 'white', color: 'black',
+                                        padding: '8px', // Padding for spacing
+                                        borderRadius: '4px', // Border radius for rounded corners
+                                        border: '1px solid #ccc'
+                                    }}
                                     required
                                 />
-                            </label>
+                            </div>
+
                             <br />
-                            <label className="text-2xl font-bold goalTypeContainer bodyBorder" id="endDateLabel" style={{ color: 'black' }}>
-                                Start Date:
-                                <input
-                                    type="date"
-                                    value={startDate}
-                                    className="goalTypeContainer dateInput"
-                                    style={{ color: 'black' }}
+                            <div className="grid grid-cols-2 items-center gap-4">
+                                <label className="text-2xl font-bold text-center" htmlFor="startDate">
+                                    Start Date:
+                                </label>
+                                <Input type='date' value={startDate} placeholder={'Start Date'}
+                                    color={'neutral'}
+                                    className="text-md leading-6 text-gray-900"
+                                    style={{
+                                        backgroundColor: 'white', color: 'black',
+                                        padding: '8px', // Padding for spacing
+                                        borderRadius: '4px', // Border radius for rounded corners
+                                        border: '1px solid #ccc'
+                                    }}
                                     onChange={(e) => setStartDate(e.target.value)}
-                                    required
-                                />
-                            </label>
+                                    required />
+                            </div>
+
                             <br />
-                            <label className="text-2xl font-bold goalTypeContainer bodyBorder" id="endDateLabel" style={{ color: 'black' }}>
-                                End Date:
-                                <input
-                                    type="date"
-                                    value={endDate}
-                                    className="goalTypeContainer dateInput"
-                                    style={{ color: 'black' }}
+                            <div className="grid grid-cols-2 items-center gap-4">
+                                <label className="text-2xl font-bold text-center" htmlFor="endDate">
+                                    End Date:
+                                </label>
+                                <Input type='date' value={endDate} placeholder={'End Date'}
+                                    color={'neutral'}
+                                    className="text-md leading-6 text-gray-900"
+                                    style={{
+                                        backgroundColor: 'white', color: 'black',
+                                        padding: '8px', // Padding for spacing
+                                        borderRadius: '4px', // Border radius for rounded corners
+                                        border: '1px solid #ccc'
+                                    }}
                                     onChange={(e) => setEndDate(e.target.value)}
-                                    required
-                                />
-                            </label>
+                                    required />
+                            </div>
+
                             <br />
-                            <button type="submit">Submit</button>
+
+                            <Modal.Actions>
+                                <Button color={"primary"} >Submit</Button>
+                                <Button onClick={handleCloseModal}>Close</Button>
+                            </Modal.Actions>
+
+
                         </form>
                     </div>
-                </div>
+                </dialog>
             )}
 
             {/* Render saved goals in edit mode */}
@@ -298,39 +334,68 @@ const GoalSettingCard = () => {
                     <button onClick={handleCancelNewGoal}>Cancel</button>
                 </div>
             )}
-            {(editMode || landingMode) && savedGoals.length > 0 && (
-                <div className="goal-container">
-                    {successMessage && (
-                        <div className="success-message">
-                            <p>{successMessage}</p>
 
-                        </div>
-                    )}
-                    {successDeleteMessage && (
-                        <div className="success-message">
-                            <p>{successDeleteMessage}</p>
-                        </div>
-                    )}
-                    <div className="goal-cards-container">
-                        {savedGoals.map((goal, index) => (
-                            <div key={goal.goalId} className="goal-card">
-                                <h3>Saved Goal {index + 1}</h3>
-                                <p>
-                                    <strong>Type:</strong> {goal.goalType}<br />
-                                    <strong>Value:</strong> {goal.targetValue}<br />
-                                    <strong>Start Date:</strong> {goal.startDate}<br />
-                                    <strong>End Date:</strong> {goal.endDate || 'No end date'}
-                                </p>
-                                <button onClick={() => handleDeleteGoal(goal.goalId)}>Delete Goal</button>
-                                <button onClick={() => handleShareGoal(goal)}>Share Goal</button>
+            <div className="goal-setting-container">
+                {loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <>
+                        {/* Render your goals content here */}
+                        {(editMode || landingMode) && savedGoals.length === 0 ? (
+                            <div className="goal-message">
+                                {successMessage && (
+                                    <div className="success-message">
+                                        <p>{successMessage}</p>
+
+                                    </div>
+                                )}
+
+                                <p>No goal has been set up for this user. Set a new goal now!</p>
+                                <button onClick={handleSetGoal}>Set Goal</button>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            )}
+                        ) : (
+                            <div className="goal-container">
+                                {successMessage && (
+                                    <div className="success-message">
+                                        <p>{successMessage}</p>
+
+                                    </div>
+                                )}
+                                {successDeleteMessage && (
+                                    <div className="success-message">
+                                        <p>{successDeleteMessage}</p>
+                                    </div>
+                                )}
+                                <div className="goal-cards-container">
+
+                                    {savedGoals.map((goal, index) => (
+                                        <div key={goal.goalId} className="goal-card">
+                                            <h3>Saved Goal {index + 1}</h3>
+                                            <p>
+                                                <strong>Type:</strong> {goal.goalType}<br />
+                                                <strong>Value:</strong> {goal.targetValue}<br />
+                                                <strong>Start Date:</strong> {goal.startDate}<br />
+                                                <strong>End Date:</strong> {goal.endDate || 'No end date'}
+                                            </p>
+                                            <Modal.Actions>
+                                                <button onClick={() => handleDeleteGoal(goal.goalId)}>Delete Goal</button>
+                                                <button onClick={() => handleShareGoal(goal)}>Share Goal</button>
+                                            </Modal.Actions>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="button-container">
+                                    <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+
 
             {showShareModal && (
-                <div className="modal">
+                <div className="modal_goal">
                     <div className="modal-content">
                         <span className="close" onClick={() => setShowShareModal(false)}>&times;</span>
                         <h2>Share Goal</h2>
@@ -344,24 +409,6 @@ const GoalSettingCard = () => {
                     </div>
                 </div>
             )}
-
-
-
-            {/* Display message if no goals are set */}
-            {(editMode || landingMode) && savedGoals.length === 0 && (
-                <div className="goal-message">
-                    <p>No goal has been set up for this user. Set a new goal now!</p>
-                    <button onClick={handleSetGoal}>Set Goal</button>
-                </div>
-            )}
-
-            {/* Trigger the handleLandingGoals function */}
-
-            <div className="button-container">
-                <button className="set-goal-button" onClick={handleSetGoal}>Set Goal</button>
-            </div>
-
-
 
         </div>
 
