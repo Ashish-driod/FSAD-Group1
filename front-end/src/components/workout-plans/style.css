@@ -51,7 +51,7 @@
 }
 
 /* Basic styling for buttons */
-.workout-card .button-container {
+.workout-card .button-container .delete-button {
     display: flex; /* Use flexbox for easy alignment */
     justify-content: space-around; /* Distribute buttons evenly */
     gap: 15px;
@@ -64,4 +64,21 @@
     border-radius: 5px; /* Add rounded corners */
     cursor: pointer;
     flex: 1; /* Make buttons take equal width */
+
+    .delete-button {
+        background-color: #ff4d4d; /* Red background */
+        color: white;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 5px;
+        cursor: pointer;
+        flex: 1;
+        display: flex;
+        align-items: center; /* Align icon vertically */
+    }
+
+    /* Optional: Style for the trash icon */
+    .delete-button svg {
+        margin-right: 5px;
+    }
 }
