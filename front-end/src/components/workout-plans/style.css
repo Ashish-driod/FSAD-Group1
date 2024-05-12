@@ -1,0 +1,67 @@
+.workout-card-container {
+    /* Adjust container width as needed */
+    max-width: 800px; /* Increased for better layout */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+.workout-card {
+    background-color: #f5f5f5; /* Lighter background color */
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px 20px; /* Increased spacing */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Adjusted card width */
+    cursor: pointer;
+}
+
+.workout-card-title-container {
+    display: flex;  /* Enable flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center (optional) */
+    width: 100%;   /* Make the container full width */
+}
+
+.workout-card-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.workout-card h3 {
+    margin-bottom: 10px;
+}
+
+.exercise-details {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #eee;
+    /* Added property */
+    max-width: 300px; /* Adjust to match workout card width */
+}
+
+.exercise-details h2 {
+    margin-bottom: 15px;
+}
+
+.toast-offset-right {
+    bottom: 20px; /* Adjust bottom position as needed */
+    left: 50%;
+    transform: translateX(40%); /* Move it to the right by 20% */
+}
+
+/* Basic styling for buttons */
+.workout-card .button-container {
+    display: flex; /* Use flexbox for easy alignment */
+    justify-content: space-around; /* Distribute buttons evenly */
+    gap: 15px;
+}
+
+.workout-card button {
+    padding: 0.5rem 1rem; /* Adjust padding as needed */
+    margin: 0.5rem 0;  /* Add some margin between buttons */
+    border: none;
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer;
+    flex: 1; /* Make buttons take equal width */
+}

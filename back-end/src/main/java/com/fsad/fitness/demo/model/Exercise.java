@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 public class Exercise {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "exercises_id")
+    private int exercises_id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -31,6 +31,12 @@ public class Exercise {
     @Column(name = "equipment_needed", nullable = false)
     private String equipment_needed;
 
+    @Column(name = "sets", nullable = true)
+    private int sets;
+
+    @Column(name = "reps", nullable = true)
+    private int reps;
+
     @JsonProperty("createdAt")
     @Column(name = "created_At", nullable = false, insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
@@ -39,12 +45,12 @@ public class Exercise {
     @Column(name = "modified_At", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime modifiedAt;
 
-    public int getId() {
-        return id;
+    public int getExercises_id() {
+        return exercises_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setExercises_id(int exercises_id) {
+        this.exercises_id = exercises_id;
     }
 
     public String getName() {

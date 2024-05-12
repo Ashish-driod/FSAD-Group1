@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -13,17 +14,13 @@ import java.time.LocalDateTime;
 @Table(name = "WorkoutPlans")
 public class WorkoutPlan {
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @Column(name = "user_id", nullable = false)
-    private int userId;
-
     @Column(name = "name", nullable = false)
-    private int name;
+    private String name;
 
     @Column(name = "description", nullable = false)
     private String description;
@@ -44,19 +41,12 @@ public class WorkoutPlan {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
-    }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 

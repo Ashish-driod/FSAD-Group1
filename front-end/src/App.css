@@ -716,3 +716,22 @@ button:hover {
 	background-color: hsl(0 0% 100%);
 	border-radius: 0.5rem;
 }
+
+.side-link {
+    color: #333; /* Default text color */
+    font-size: 1rem; /* Default font size */
+    text-decoration: none; /* Remove underline */
+}
+
+.bold-link {
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 2px solid black;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.social-media-container {
+    border: 2px solid black;
+    padding: 20px;
+}

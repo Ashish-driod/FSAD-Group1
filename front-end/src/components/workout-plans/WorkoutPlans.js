@@ -1,10 +1,17 @@
 import React from 'react';
 
-const WorkoutPlans = () => (
-    <div>
-        <h1 className="text-2xl font-bold">Work out Plans</h1>
-        <p>Add or view Workout plans.</p>
-    </div>
-);
+import 'App.css';
+import './style.css';
+import WorkoutCards from "./WorkoutCards";
+
+const WorkoutPlans = () => {
+    return (
+        <div className="app-container">
+            <h1 className="pageTitle" style={{marginBottom:20}}>~Available Workout Plans~</h1>
+
+            <WorkoutCards />
+        </div>
+    );
+};
 
 export default WorkoutPlans;

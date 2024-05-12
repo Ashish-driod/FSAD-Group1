@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    private Integer id;
+    private String id;
 
     @Column(name = "username", nullable = false)
     private String username;

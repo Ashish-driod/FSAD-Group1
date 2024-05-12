@@ -43,6 +43,15 @@ const SidePanel = () => {
                     <ClipboardListIcon className="h-5 w-5"/>
                     <span>Workout Plans</span>
                 </Link>
+                <Link className={`flex items-center space-x-3 text-white p-2 rounded-md ${activeLink === 'workouts' ? 'active' : ''}`} to={'/dashboard/social-media'}
+                      onClick={() => handleLinkClick('social_media')}>
+                    <ClipboardListIcon className="h-5 w-5"/>
+                    <span>Social Media</span>
+                </Link>
+                {/*<Link to="/dashboard/social-media" className="text-gray-700 hover:text-indigo-600">*/}
+                {/*    Social Media*/}
+                {/*    >>>>>>> Stashed changes*/}
+                {/*</Link>*/}
             </nav>
             <div className="user-name-panel">
                 <div className="flex items-center space-x-3 text-white bg-[#4338ca] p-2 rounded-md">
