@@ -11,6 +11,8 @@ public interface UserWorkoutPlanRepository extends JpaRepository<UserWorkoutPlan
 
     List<UserWorkoutPlan> findByUserId(String userId);
 
-    void deleteByWorkoutPlanId(int workoutPlanId);
+    UserWorkoutPlan findByUserIdAndWorkoutPlanId(String userId,int workoutPlanId);
+
+    void deleteByUserIdAndWorkoutPlanId(String userId,int workoutPlanId);
 
 }

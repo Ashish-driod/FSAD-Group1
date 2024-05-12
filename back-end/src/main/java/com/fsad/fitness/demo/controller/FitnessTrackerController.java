@@ -64,10 +64,22 @@ public class FitnessTrackerController {
         }
     }
 
-//    @DeleteMapping("/workoutPlans/{workoutPlanId}")
-//    public ResponseEntity<HttpStatus> removeMappedWorkoutPlan(@RequestBody UserWorkoutPlan userWorkoutPlan, @PathVariable int workoutPlanId){
-//
-//    }
+    @DeleteMapping("/deleteWorkoutPlan/{workoutPlanId}")
+    public ResponseEntity<String> removeWorkoutPlanFromUser(@RequestBody UserWorkoutPlan userWorkoutPlan, @PathVariable int workoutPlanId){
+
+        if(userWorkoutPlanRepository.findByUserIdAndWorkoutPlanId(userWorkoutPlan.getUserId(),workoutPlanId) != null){
+            try{
+                userWorkoutPlanRepository.deleteByUserIdAndWorkoutPlanId(userWorkoutPlan.getUserId(),workoutPlanId);
+            }catch (Exception e){
+                return new ResponseEntity<>("Delete Workout Plan failed",HttpStatus.valueOf(500));
+            }
+
+        }
+
+        return new ResponseEntity<>(HttpStatus.valueOf(204));
+
+    }
+
 
     private Boolean validateIfPlanExistsForUser(UserWorkoutPlan newUserWorkoutPlan){
         List<UserWorkoutPlan> list = userWorkoutPlanRepository.findByUserId(newUserWorkoutPlan.getUserId());
