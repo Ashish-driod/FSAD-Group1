@@ -42,7 +42,11 @@ const App = () => {
                         <Route path="home" element={<Home />} />
                         <Route path="goal-setting" element={<GoalSetting />} />
                         <Route path="activity-tracking" element={<ActivityTracking />} />
+<<<<<<< Updated upstream
                         <Route path="workout-plans" element={<WorkoutPlans />} />
+=======
+                        <Route path="social-media" element={<SocialMedia />} />
+>>>>>>> Stashed changes
                     </Route>
                 </Routes>
             </UserCredentialProvider>

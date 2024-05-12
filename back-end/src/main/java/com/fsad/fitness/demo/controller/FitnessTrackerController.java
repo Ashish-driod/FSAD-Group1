@@ -175,7 +175,7 @@ public class FitnessTrackerController {
     }
 
     // New endpoint to add a activity
-    @SuppressWarnings("unused")
+
 	@Transactional
     @PostMapping("/addActivity/{goalId}")
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity, @PathVariable Integer goalId) {
