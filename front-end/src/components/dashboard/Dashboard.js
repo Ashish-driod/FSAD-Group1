@@ -3,17 +3,8 @@ import SidePanel from 'components/dashboard/sidepanel/SidePanel';
 import { Outlet } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import './Dashboard.css';
+import {ToastContainer} from "react-toastify";
 
-const steps = 5000;
-const caloriesBurnt = 300;
-const heartRate = 80;
-
-//Testing code issue
-const data = {
-    steps: 5000,
-    caloriesBurnt: 300,
-    heartRate: 80
-};
 
 
 const Dashboard = () => {
@@ -48,25 +39,11 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </header>
-                <Outlet /> {/* This is where the routed components will be displayed */}
-                <div className="dashboard-container">
-                    Good Job! Every Step counts ! Let's have look at your today's effort :
-                    <br /><br />
-                    <div className="section-container">
-                        <div className="section">
-                            <h2>Steps</h2>
-                            <p>{steps}</p>
-                        </div>
-                        <div className="section">
-                            <h2>Calories Burnt</h2>
-                            <p>{caloriesBurnt}</p>
-                        </div>
-                        <div className="section">
-                            <h2>Heart Rate</h2>
-                            <p>{heartRate}</p>
-                        </div>
-                    </div>
-                </div>
+                <Outlet />
+                <ToastContainer
+                    position="bottom-center" // Set default position for all toasts
+                    autoClose={2000} />
+                {/* This is where the routed components will be displayed */}
             </div>
         </div>
     );

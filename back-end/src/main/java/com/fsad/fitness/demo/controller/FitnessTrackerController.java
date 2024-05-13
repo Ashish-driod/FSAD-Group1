@@ -5,11 +5,8 @@ import com.fsad.fitness.demo.model.*;
 import com.fsad.fitness.demo.repository.UserRepository;
 import com.fsad.fitness.demo.repository.UserWorkoutPlanRepository;
 import com.fsad.fitness.demo.repository.WorkoutPlanExerciseRepository;
-import com.fsad.fitness.demo.service.ActivityService;
-import com.fsad.fitness.demo.service.ExerciseService;
-import com.fsad.fitness.demo.service.GoalService; // Import Goal service
+import com.fsad.fitness.demo.service.*;
 
-import com.fsad.fitness.demo.service.WorkoutPlanService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +22,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/fitness-tracker")
 public class FitnessTrackerController {
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     UserRepository userRepository;
@@ -48,6 +48,11 @@ public class FitnessTrackerController {
     UserWorkoutPlanRepository userWorkoutPlanRepository;
 
 
+    @PostMapping("/registerUser")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        User usr = userService.save(user);
+        return new ResponseEntity<>(usr, HttpStatus.OK);
+    }
 
     @PostMapping("/mapWorkoutPlans/{workoutPlanId}")
     public ResponseEntity<String> addWorkoutPlanToUser(@RequestBody UserWorkoutPlan userWorkoutPlan, @PathVariable int workoutPlanId){
@@ -193,19 +198,32 @@ public class FitnessTrackerController {
     }
 
     // New endpoint to get all activities
-    @GetMapping("/getAllActivities/{goalId}")
-    public ResponseEntity<List<Activity>> getAllActivities( @PathVariable Integer goalId) {
+    @GetMapping("/getAllActivities/{userId}")
+    public ResponseEntity<List<Activity>> getAllActivities( @PathVariable String userId) {
     	try
     	{
-	    	if (Objects.isNull(goalId)) {
+	    	if (Objects.isNull(userId)) {
 				throw new IllegalArgumentException("Goal Id Present in Path");
 			}
-	        List<Activity> activities = activityService.getAllActivities(goalId);
+	        List<Activity> activities = activityService.getAllActivities(userId);
 	        return ResponseEntity.ok(activities);
     	} catch (Exception ex) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
 		}
     }
+
+    @GetMapping("/getAllAcvt")
+    public ResponseEntity<List<Activity>> getAllAcvt(@RequestParam("userId") String userId) {
+        try {
+            List<Activity> activities = activityService.getAllAcvtByUserId(userId);
+            return ResponseEntity.ok(activities);
+        }catch (Exception ex){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        }
+    }
+
+
+
 
     // New endpoint to get a activity by ID
     @SuppressWarnings("unused")

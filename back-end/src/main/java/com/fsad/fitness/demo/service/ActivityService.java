@@ -30,15 +30,15 @@ public class ActivityService {
     @Transactional
     public Activity addActivity(Activity activity, Integer goalId) {
         Activity activityResult = activityRepository.save(activity);
-        ActivitiesGoalsMapping activitiesGoalsMapping = new ActivitiesGoalsMapping();
-        activitiesGoalsMapping.setActivityId(activityResult.getActivityId());
-        activitiesGoalsMapping.setGoalId(goalId);
-        activitiesGoalsMappingRepository.save(activitiesGoalsMapping);
+//        ActivitiesGoalsMapping activitiesGoalsMapping = new ActivitiesGoalsMapping();
+//        activitiesGoalsMapping.setActivityId(activityResult.getActivityId());
+//        activitiesGoalsMapping.setGoalId(goalId);
+//        activitiesGoalsMappingRepository.save(activitiesGoalsMapping);
         return activityResult;
     }
 
-    public List<Activity> getAllActivities(Integer goalId) {
-        return activitiesGoalsMappingRepository.getActivitiesByGoalId(goalId);
+    public List<Activity> getAllActivities(String userId) {
+        return activitiesGoalsMappingRepository.getActivitiesByGoalId(userId);
     }
 
     public Activity getActivityById(int activityId) {
@@ -49,6 +49,11 @@ public class ActivityService {
 		}
         return activity.get();
     }
+
+    public List<Activity> getAllAcvtByUserId(String userId){
+        return activityRepository.findByUserId(userId);
+    }
+
 
     @Transactional
     public void deleteActivityById(int activityId) {
