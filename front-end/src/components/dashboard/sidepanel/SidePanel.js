@@ -5,9 +5,6 @@ import {WavesIcon,HomeIcon,Goal,BriefcaseIcon,CalendarIcon,TextIcon,ClipboardLis
 import { getAuth, signOut } from 'firebase/auth';
 
 const SidePanel = () => {
-
-    console.log('testing');
-
     const [activeLink, setActiveLink] = useState('home');
 
     const auth = getAuth();
@@ -56,10 +53,6 @@ const SidePanel = () => {
                     <ClipboardListIcon className="h-5 w-5"/>
                     <span>Social Media</span>
                 </Link>
-                {/*<Link to="/dashboard/social-media" className="text-gray-700 hover:text-indigo-600">*/}
-                {/*    Social Media*/}
-                {/*    >>>>>>> Stashed changes*/}
-                {/*</Link>*/}
             </nav>
             <div className="user-name-panel">
                 <div className="flex items-center space-x-3 text-white bg-[#4338ca] p-2 rounded-md">
