@@ -11,7 +11,10 @@ import ProtectedRoute from 'components/protected-route/ProtectedRoute'; // Your 
 import { UserCredentialProvider } from 'contexts/UserContext'; // Import UserProvider
 import { getAuth, onAuthStateChanged  } from 'firebase/auth';
 import WorkoutPlans from "components/workout-plans/WorkoutPlans";
+import MyWorkoutPlans from "./components/my-workout-plans/MyWorkoutPlans";
 import SocialMedia from 'components/social-media/SocialMediaConnect';
+
+
 
 
 const App = () => {
@@ -41,6 +44,7 @@ const App = () => {
                         <Route path="activity-tracking" element={<ActivityTracking />} />
                         <Route path="workout-plans" element={<WorkoutPlans />} />
                         <Route path="social-media" element={<SocialMedia />} />
+                        <Route path="my-workout-plans" element={<MyWorkoutPlans />} />
                     </Route>
                 </Routes>
             </UserCredentialProvider>
