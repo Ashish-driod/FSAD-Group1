@@ -1,0 +1,44 @@
+/* Dashboard.css */
+
+/* Dashboard container */
+.dashboard-container {
+    padding: 40px;
+    background-color: #f0f4f8; /* Light blue-gray */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    color: purple;
+  }
+  
+  .dashboard-container h1 {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Section container */
+  .section-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Gap between sections */
+  }
+  
+  /* Individual section */
+  .section {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .section h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .section p {
+    font-size: 20px;
+    color: #666;
+  }
+  
