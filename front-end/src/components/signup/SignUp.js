@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import {registerUserToDB} from 'queries/users';
+import {toast, ToastContainer} from "react-toastify";
+
+const imagebase = require('assets/RegistrationPage.png');
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -13,8 +17,37 @@ const SignUp = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            navigate('/login'); // Redirect to login after successful signup
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // User successfully created
+                    const user = userCredential.user;
+
+                    // Get the user ID (uid)
+                    const userId = user?.uid;
+
+                    console.log('User ID:', userId);
+                    toast.success("User registered successfully.");
+                    registerUserToDB({
+                        id:userId,
+                        username: user?.email
+                    }).then((user)=>{
+                        console.log("registered user::", user);
+                        toast.success("User registered successfully.");
+                        navigate('/login');
+                    }).catch((err)=>{
+                        console.log(err);
+                        toast.error("Not able to register user, please try again!")
+                    })
+
+
+
+                    // Display the user ID in the console or use it in your app logic
+                })
+                .catch((error) => {
+                    console.error('Error creating user:', error.message); // Handle errors (e.g., email already in use, weak password, etc.)
+                });
+           // await createUserWithEmailAndPassword(auth, email, password);
+             // Redirect to login after successful signup
         } catch (error) {
             setError(error.message);
         }
@@ -32,12 +65,14 @@ const SignUp = () => {
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                     alt="Your Company"
                 />
+                <img src={imagebase} alt="Fitness Tracker" />
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                     Create your account
                 </h2>
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                
                 <form className="space-y-6" onSubmit={handleSignUp}>
                     {error && <p className="text-red-500 text-xs italic">{error}</p>}
                     <div>
@@ -93,6 +128,9 @@ const SignUp = () => {
                     </a>
                 </p>
             </div>
+            <ToastContainer
+                position="bottom-center" // Set default position for all toasts
+                autoClose={2000} />
         </div>
     );
 };

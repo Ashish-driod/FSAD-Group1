@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+
+import {getAllGoals} from "queries/goal";
+import { useUserCredential } from 'contexts/UserContext'; // Import useUserCredential hook
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const { setUserCredential } = useUserCredential();
 
     const auth = getAuth();
     const navigate = useNavigate();
@@ -13,7 +17,13 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(auth, email, password).then(userCredential => {
+                setUserCredential(userCredential);
+                console.log(userCredential)
+                getAllGoals();
+            }).catch((errObj)=>{
+                console.log(errObj);
+            });
             navigate('/dashboard/home'); // Redirect to dashboard upon successful login
         } catch (error) {
             setError(error.message);
