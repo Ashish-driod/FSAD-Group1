@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-//import { imagebase }  from 'assets/RegistrationPage.png';
+import {registerUserToDB} from 'queries/users';
+import {toast, ToastContainer} from "react-toastify";
+
 const imagebase = require('assets/RegistrationPage.png');
-
-
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -23,10 +23,24 @@ const SignUp = () => {
                     const user = userCredential.user;
 
                     // Get the user ID (uid)
-                    const userId = user.uid;
+                    const userId = user?.uid;
 
                     console.log('User ID:', userId);
-                    navigate('/login');
+                    toast.success("User registered successfully.");
+                    registerUserToDB({
+                        id:userId,
+                        username: user?.email
+                    }).then((user)=>{
+                        console.log("registered user::", user);
+                        toast.success("User registered successfully.");
+                        navigate('/login');
+                    }).catch((err)=>{
+                        console.log(err);
+                        toast.error("Not able to register user, please try again!")
+                    })
+
+
+
                     // Display the user ID in the console or use it in your app logic
                 })
                 .catch((error) => {
@@ -114,6 +128,9 @@ const SignUp = () => {
                     </a>
                 </p>
             </div>
+            <ToastContainer
+                position="bottom-center" // Set default position for all toasts
+                autoClose={2000} />
         </div>
     );
 };

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "Activities_Goals_Mapping")
+@Table(name = "activities_goals_mapping")
 public class ActivitiesGoalsMapping{
 
     @Id
