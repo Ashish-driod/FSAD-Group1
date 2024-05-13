@@ -51,7 +51,7 @@
 }
 
 /* Basic styling for buttons */
-.workout-card .button-container .delete-button {
+.workout-card .button-container .delete-button   {
     display: flex; /* Use flexbox for easy alignment */
     justify-content: space-around; /* Distribute buttons evenly */
     gap: 15px;
@@ -66,7 +66,7 @@
     flex: 1; /* Make buttons take equal width */
 
     .delete-button {
-        background-color: #ff4d4d; /* Red background */
+        background-color: RED; /* Red background */
         color: white;
         border: none;
         padding: 0.5rem;

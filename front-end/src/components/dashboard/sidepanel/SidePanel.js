@@ -44,9 +44,14 @@ const SidePanel = () => {
                 <Link className={`flex items-center space-x-3 text-white p-2 rounded-md ${activeLink === 'workouts' ? 'active' : ''}`} to={'/dashboard/workout-plans'}
                       onClick={() => handleLinkClick('workouts')}>
                     <ClipboardListIcon className="h-5 w-5"/>
-                    <span>Workout Plans</span>
+                    <span>Available workout plans</span>
                 </Link>
-                <Link className={`flex items-center space-x-3 text-white p-2 rounded-md ${activeLink === 'workouts' ? 'active' : ''}`} to={'/dashboard/social-media'}
+                <Link className={`flex items-center space-x-3 text-white p-2 rounded-md ${activeLink === 'my-workouts' ? 'active' : ''}`} to={'/dashboard/my-workout-plans'}
+                      onClick={() => handleLinkClick('my-workouts')}>
+                    <ClipboardListIcon className="h-5 w-5"/>
+                    <span>My workout plans</span>
+                </Link>
+                <Link className={`flex items-center space-x-3 text-white p-2 rounded-md ${activeLink === 'social_media' ? 'active' : ''}`} to={'/dashboard/social-media'}
                       onClick={() => handleLinkClick('social_media')}>
                     <ClipboardListIcon className="h-5 w-5"/>
                     <span>Social Media</span>
